@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using PetManagement;
 using PetManagement.Data;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
