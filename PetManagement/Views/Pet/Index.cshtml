@@ -1,0 +1,24 @@
+﻿@model IEnumerable<Pet>
+
+<h2>Pet List</h2>
+
+<a asp-action="Create" class="btn btn-primary">Add Pet</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Category</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var pet in Model)
+        {
+            <tr>
+                <td>@pet.Name</td>
+                <td>@pet.Age</td>
+                <td>@pet.Category?.CategoryName</td>
+            </tr>
+        }
+    </tbody>
+</table>
