@@ -1,0 +1,17 @@
+﻿@model Owner
+
+@{
+    ViewData["Title"] = "Delete Owner";
+}
+
+<h1>Delete Owner</h1>
+<h3>Are you sure you want to delete this owner?</h3>
+
+<div>
+    <h4 class="text-danger">@Model.Name</h4>
+    <form asp-action="DeleteConfirmed">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>

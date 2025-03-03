@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PetManagement.Data;
 using PetManagement.Models;
 using System.Collections.Generic;
@@ -46,7 +47,7 @@ namespace PetManagement.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Owners/Edit/5
+        [HttpGet]
         public IActionResult Edit(int id)
         {
             var owner = _context.Owners.Find(id);
@@ -57,11 +58,12 @@ namespace PetManagement.Controllers
             return View(owner);
         }
 
-        // POST: Owners/Edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
+       /* [ValidateAntiForgeryToken]*/
         public IActionResult Edit(int id, Owner owner)
         {
+            ModelState.Remove("Pets"); // Remove Pets validation
+
             if (id != owner.Id)
             {
                 return NotFound();
@@ -69,14 +71,30 @@ namespace PetManagement.Controllers
 
             if (ModelState.IsValid)
             {
-                _context.Update(owner);
-                _context.SaveChanges();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    _context.Update(owner);
+                    _context.SaveChanges();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!_context.Owners.Any(e => e.Id == owner.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
             }
+            Console.WriteLine($"Id nhận được: {id}");
+
             return View(owner);
         }
 
-        // GET: Owners/Delete/5
+        [HttpGet]
         public IActionResult Delete(int id)
         {
             var owner = _context.Owners.Find(id);
@@ -87,15 +105,20 @@ namespace PetManagement.Controllers
             return View(owner);
         }
 
-        // POST: Owners/Delete/5
-        [HttpPost, ActionName("Delete")]
+
+
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
             var owner = _context.Owners.Find(id);
-            _context.Owners.Remove(owner);
-            _context.SaveChanges();
+            if (owner != null)
+            {
+                _context.Owners.Remove(owner);
+                _context.SaveChanges();
+            }
             return RedirectToAction(nameof(Index));
         }
+
     }
 }

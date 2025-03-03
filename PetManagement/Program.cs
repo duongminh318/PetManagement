@@ -4,10 +4,15 @@ using PetManagement.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Add services to the container.
+builder.Services.AddControllersWithViews();
+
+
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -29,6 +34,8 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-
+/*app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Owners}/{action=Index}/{id?}");*/
 
 app.Run();
